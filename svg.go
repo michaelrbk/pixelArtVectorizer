@@ -16,16 +16,15 @@ func genSVG(pixels [][]Pixel, graph graph.Mutable) {
 	f, _ := os.Create("Vector.svg")
 	canvas := svg.New(f)
 	p := pixels[0][0]
-	canvas.Startpercent(100, 100)
+	canvas.Start(width, height)
+
+	//Print all pixel squares
 	for y := 0; y <= width; y++ {
 		for x := 0; x <= height; x++ {
 			p = pixels[x][y]
 			canvas.Rect(x, y, scale, scale, "fill:"+hexColor(p))
 		}
 	}
-	//	for v := 0; v < g.Order(); v++ {
-
-	//	}
 
 	canvas.End()
 
