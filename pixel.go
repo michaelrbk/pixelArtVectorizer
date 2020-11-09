@@ -18,12 +18,12 @@ func getPixels(img image.Image) ([][]Pixel, error) {
 	width, height := bounds.Max.X, bounds.Max.Y
 
 	var pixels [][]Pixel
-	for y := 0; y < height; y++ {
-		var row []Pixel
-		for x := 0; x < width; x++ {
-			row = append(row, rgbaToPixel(img.At(x, y).RGBA()))
+	for x := 0; x < width; x++ {
+		var col []Pixel
+		for y := 0; y < height; y++ {
+			col = append(col, rgbaToPixel(img.At(x, y).RGBA()))
 		}
-		pixels = append(pixels, row)
+		pixels = append(pixels, col)
 	}
 
 	return pixels, nil
