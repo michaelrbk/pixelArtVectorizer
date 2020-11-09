@@ -27,9 +27,9 @@ func main() {
 		return
 	}
 	//bi-dimensional pixel array
-	g := newGraph(pixels)
+	g := genGraph(pixels)
 	genSVG(pixels, *g)
-	// solveAmbiguities()
+	// solveAmbiguities(pixels, *g)
 	// reshapePixelCell()
 	// drawNewGraphEdges()
 	// createNewCurves()
@@ -68,7 +68,14 @@ func readImage(file string) (image.Image, error) {
 	return loadedImage, nil
 }
 
-func newGraph(pixels [][]Pixel) *graph.Mutable {
+/*
+newGraph generate a graph from pixel art with connections
+mario_8bit.png example
+	Dimensions 19 x 18
+	width 19
+	height 18
+*/
+func genGraph(pixels [][]Pixel) *graph.Mutable {
 
 	width := len(pixels)
 	height := len(pixels[0])
@@ -128,4 +135,68 @@ func newGraph(pixels [][]Pixel) *graph.Mutable {
 		}
 	}
 	return g
+}
+
+// solveAmbiguities
+// analyse block of 2x2 vertex to delete the max amount of edges and alse remover cross conections between this vertexes/pixels
+// 00 10
+// 01 11
+func solveAmbiguities(pixels [][]Pixel, g graph.Mutable) {
+
+	width := len(pixels)
+	height := len(pixels[0])
+
+	for x := 0; x < width; x++ {
+		for y := 0; y < height; y++ {
+			p00 := a2dTo1d(x, y, width)
+			c00 := pixels[x][y]
+
+			p10 := a2dTo1d(x+1, y, width)
+			//c10 := pixels[x+1][y]
+
+			p01 := a2dTo1d(x, y+1, width)
+			c01 := pixels[x][y+1]
+
+			p11 := a2dTo1d(x+1, y+1, width)
+			//c11 := pixels[x+1][y+1]
+
+			//Crossing edges that we need to elimnate
+			if g.Edge(p11, p00) && g.Edge(p01, p10) {
+				// Ambiguity
+				if c00 == c01 { //Same color
+					if g.Edge(p11, p00) {
+						g.Delete(p11, p00)
+					}
+					if g.Edge(p01, p10) {
+						g.Delete(p01, p10)
+					}
+
+					// island heuristic
+				} else if g.Degree(p11) == 1 || g.Degree(p00) == 1 { //if is alone need to keep connected
+					if g.Edge(p01, p10) {
+						g.Delete(p01, p10)
+					}
+				} else if g.Degree(p01) == 1 || g.Degree(p10) == 1 {
+					if g.Edge(p11, p00) {
+						g.Delete(p11, p00)
+					}
+				} else {
+					// curve heuristic
+					if g.Degree(p01) == 2 || g.Degree(p10) == 2 || g.Degree(p11) == 2 || g.Degree(p00) == 2 { // is part of a curve the bigger curve is keep connected
+						// if curve size from edge1 <= edge2
+						// 	remove edge1
+						// else remove edge 2
+					} else {
+						//heuristic of overlapping pixels
+					}
+				}
+
+			}
+
+		}
+	}
+
+}
+func curveSize(g *graph.Mutable, p00 int, p01 int, p10 int, p11 int) int {
+	return 0
 }
