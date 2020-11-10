@@ -8,12 +8,17 @@ The old version was a proof of concept and the creation of the core algorith. Th
 
 
 * Source file
-![genGraph](./results/0.source.svg)
+<p align="center">
+<img src="./results/0.source.svg" height="200">
+</p>
 * Generating a graph with similar color
-![genGraph](./results/1.genGraph.svg)
+<p align="center">
+<img src="./results/1.genGraph.svg" height="200">
+</p>
 * Solving ambiquities in the graph's connections 
-![solveAmbiguities](./results/2.solveAmbiguities.svg)
-
+<p align="center">
+<img src="./results/2.solveAmbiguities.svg" height="200">
+</p>
 
 Copyright [2020] [Michael de Rezende Becker]
 
