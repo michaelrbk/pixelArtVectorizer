@@ -151,20 +151,20 @@ func solveAmbiguities(pixels [][]Pixel, g graph.Mutable, genSVG bool) {
 				// Ambiguity
 				if p00.Color == p01.Color && p00.Color != (Color{}) { //Same color and not empty pixel
 					if g.Edge(p11.V, p00.V) {
-						g.Delete(p11.V, p00.V)
+						g.DeleteBoth(p11.V, p00.V)
 					}
 					if g.Edge(p01.V, p10.V) {
-						g.Delete(p01.V, p10.V)
+						g.DeleteBoth(p01.V, p10.V)
 					}
 
 					// island heuristic
 				} else if g.Degree(p11.V) == 1 || g.Degree(p00.V) == 1 { //if is alone need to keep connected
 					if g.Edge(p01.V, p10.V) {
-						g.Delete(p01.V, p10.V)
+						g.DeleteBoth(p01.V, p10.V)
 					}
 				} else if g.Degree(p01.V) == 1 || g.Degree(p10.V) == 1 {
 					if g.Edge(p11.V, p00.V) {
-						g.Delete(p11.V, p00.V)
+						g.DeleteBoth(p11.V, p00.V)
 					}
 				} else {
 					// curve heuristic
