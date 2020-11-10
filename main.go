@@ -79,13 +79,11 @@ func genGraph(pixels [][]Pixel, genSVG bool) *graph.Mutable {
 
 	width := len(pixels)
 	height := len(pixels[0])
-	a2dSize := len(pixels[0]) - 1
-	g := graph.New(16)
+	g := graph.New(width * height)
 	xc := 0
 	yc := 0
 	p := Pixel{}
 	pc := p //Comparison pixel
-
 	for x := 0; x < width; x++ {
 		for y := 0; y < height; y++ {
 
@@ -94,33 +92,32 @@ func genGraph(pixels [][]Pixel, genSVG bool) *graph.Mutable {
 			xc = x - 1
 
 			yc = y - 1
-			pc = getPixel(pixels, x-1, y-1)
-			if p == pc {
-				g.AddBoth(a2dTo1d(x, y, a2dSize), a2dTo1d(xc, yc, a2dSize))
+			pc = getPixel(pixels, xc, yc)
+			if p.Color == pc.Color {
+				g.AddBoth(p.V, pc.V)
 			}
 
 			xc = x
 			yc = y - 1
-			pc = getPixel(pixels, x, y-1)
-			if p == pc {
-				g.AddBoth(a2dTo1d(x, y, a2dSize), a2dTo1d(xc, yc, a2dSize))
+			pc = getPixel(pixels, xc, yc)
+			if p.Color == pc.Color {
+				g.AddBoth(p.V, pc.V)
 			}
 
 			xc = x + 1
 			yc = y - 1
-			pc = getPixel(pixels, x+1, y-1)
-			if p == pc {
-				g.AddBoth(a2dTo1d(x, y, a2dSize), a2dTo1d(xc, yc, a2dSize))
+			pc = getPixel(pixels, xc, yc)
+			if p.Color == pc.Color {
+				g.AddBoth(p.V, pc.V)
 
 			}
 			xc = x - 1
 			yc = y
 
-			pc = getPixel(pixels, x-1, y)
-			if p == pc {
-				g.AddBoth(a2dTo1d(x, y, a2dSize), a2dTo1d(xc, yc, a2dSize))
+			pc = getPixel(pixels, xc, yc)
+			if p.Color == pc.Color {
+				g.AddBoth(p.V, pc.V)
 			}
-
 		}
 	}
 	if genSVG {
@@ -138,48 +135,40 @@ func solveAmbiguities(pixels [][]Pixel, g graph.Mutable, genSVG bool) {
 	width := len(pixels)
 	height := len(pixels[0])
 
-	//Vertex being analysed
-	p00, p10 := 0, 0
-	p01, p11 := 0, 0
-
-	//Pixel Color
-	c00, c01 := Pixel{}, Pixel{}
+	//Pixel being analysed
+	p00, p10 := Pixel{}, Pixel{}
+	p01, p11 := Pixel{}, Pixel{}
 
 	for x := 0; x < width; x++ {
 		for y := 0; y < height; y++ {
-			p00 = a2dTo1d(x, y, height)
-			c00 = getPixel(pixels, x, y)
+			p00 = getPixel(pixels, x, y)
+			p10 = getPixel(pixels, x+1, y)
+			p01 = getPixel(pixels, x, y+1)
+			p11 = getPixel(pixels, x+1, y+1)
 
-			p10 = a2dTo1d(x+1, y, height)
-
-			p01 = a2dTo1d(x, y+1, height)
-			c01 = getPixel(pixels, x, y+1)
-
-			p11 = a2dTo1d(x+1, y+1, height)
-
-			//Crossing edges that we need to elimnate
-			if g.Edge(p11, p00) && g.Edge(p01, p10) {
+			//Crossing edges that we need to elimenate
+			if g.Edge(p11.V, p00.V) && g.Edge(p01.V, p10.V) {
 				// Ambiguity
-				if c00 == c01 && c00 != (Pixel{}) { //Same color and not empty pixel
-					if g.Edge(p11, p00) {
-						g.Delete(p11, p00)
+				if p00.Color == p01.Color && p00.Color != (Color{}) { //Same color and not empty pixel
+					if g.Edge(p11.V, p00.V) {
+						g.Delete(p11.V, p00.V)
 					}
-					if g.Edge(p01, p10) {
-						g.Delete(p01, p10)
+					if g.Edge(p01.V, p10.V) {
+						g.Delete(p01.V, p10.V)
 					}
 
 					// island heuristic
-				} else if g.Degree(p11) == 1 || g.Degree(p00) == 1 { //if is alone need to keep connected
-					if g.Edge(p01, p10) {
-						g.Delete(p01, p10)
+				} else if g.Degree(p11.V) == 1 || g.Degree(p00.V) == 1 { //if is alone need to keep connected
+					if g.Edge(p01.V, p10.V) {
+						g.Delete(p01.V, p10.V)
 					}
-				} else if g.Degree(p01) == 1 || g.Degree(p10) == 1 {
-					if g.Edge(p11, p00) {
-						g.Delete(p11, p00)
+				} else if g.Degree(p01.V) == 1 || g.Degree(p10.V) == 1 {
+					if g.Edge(p11.V, p00.V) {
+						g.Delete(p11.V, p00.V)
 					}
 				} else {
 					// curve heuristic
-					if g.Degree(p01) == 2 || g.Degree(p10) == 2 || g.Degree(p11) == 2 || g.Degree(p00) == 2 { // is part of a curve the bigger curve is keep connected
+					if g.Degree(p01.V) == 2 || g.Degree(p10.V) == 2 || g.Degree(p11.V) == 2 || g.Degree(p00.V) == 2 { // is part of a curve the bigger curve is keep connected
 						// if curve size from edge1 <= edge2
 						// 	remove edge1
 						// else remove edge 2
@@ -187,9 +176,7 @@ func solveAmbiguities(pixels [][]Pixel, g graph.Mutable, genSVG bool) {
 						//heuristic of overlapping pixels
 					}
 				}
-
 			}
-
 		}
 	}
 	if genSVG {
@@ -198,6 +185,7 @@ func solveAmbiguities(pixels [][]Pixel, g graph.Mutable, genSVG bool) {
 
 }
 func curveSize(g graph.Mutable, p00 int, p01 int, p10 int, p11 int) int {
+	// todo:
 	return 0
 }
 
@@ -206,9 +194,24 @@ func getPixel(pixels [][]Pixel, x int, y int) Pixel {
 	height := len(pixels[0])
 
 	if x >= 0 && y >= 0 && x < width && y < height {
-		println(x, y)
 		return pixels[x][y]
 	}
 	return Pixel{}
 
+}
+
+//getpixelv from Vertice index
+func getPixelV(pixels [][]Pixel, v int) Pixel {
+	width := len(pixels)
+	height := len(pixels[0])
+	p := Pixel{}
+	for x := 0; x < width; x++ {
+		for y := 0; y < height; y++ {
+			p = getPixel(pixels, x, y)
+			if p.V == v {
+				return p
+			}
+		}
+	}
+	return p
 }

@@ -11,7 +11,7 @@
             "mode": "auto",
             "program": "${fileDirname}",
             "env": {},
-            "args": ["./testData/16p_ziggyzag.png"]
+            "args": ["./testData/mario_8bit.png"]
         }
     ]
 }
