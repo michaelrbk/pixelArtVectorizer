@@ -7,15 +7,13 @@ Basead on my previous project SVG Vectorize in .net framework https://github.com
 The old version was a proof of concept and the creation of the core algorith. This new version in go langhas the goal to create a console app to convert a pixel art to a new image file vectorized. With several improvements aiming on make the algorith usable in other aplications, maybe a emulator.
 
 
-Source file
-![Alt text](./results/0.source.png)
-<img src="./results/0.source.png">
-Generating a graph with similar color
-![Alt text](./results/1.genGraph.svg)
-<img src="./results/1.genGraph.svg">
-Solving ambiquities in the graph's connections 
-![Alt text](./results/2.solveAmbiguities.svg)
-<img src="./results/2.solveAmbiguities.svg">
+* Source file
+![source](./results/0.source.png)
+* Generating a graph with similar color
+![genGraph](./results/1.genGraph.svg)
+* Solving ambiquities in the graph's connections 
+![solveAmbiguities](./results/2.solveAmbiguities.svg)
+
 
 Copyright [2020] [Michael de Rezende Becker]
 
