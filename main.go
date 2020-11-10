@@ -27,9 +27,9 @@ func main() {
 		return
 	}
 	//bi-dimensional pixel array
-	g := genGraph(pixels)
-	genSVG(pixels, *g)
-	// solveAmbiguities(pixels, *g)
+	g := genGraph(pixels, true)
+
+	solveAmbiguities(pixels, *g, true)
 	// reshapePixelCell()
 	// drawNewGraphEdges()
 	// createNewCurves()
@@ -75,15 +75,16 @@ mario_8bit.png example
 	width 19
 	height 18
 */
-func genGraph(pixels [][]Pixel) *graph.Mutable {
+func genGraph(pixels [][]Pixel, genSVG bool) *graph.Mutable {
 
 	width := len(pixels)
 	height := len(pixels[0])
-	g := graph.New((height + 1) * (width + 1))
+	a2dSize := len(pixels[0]) - 1
+	g := graph.New(16)
 	xc := 0
 	yc := 0
-	p := pixels[0][0]
-	pCompare := p
+	p := Pixel{}
+	pc := p //Comparison pixel
 
 	for x := 0; x < width; x++ {
 		for y := 0; y < height; y++ {
@@ -91,48 +92,39 @@ func genGraph(pixels [][]Pixel) *graph.Mutable {
 			p = pixels[x][y]
 
 			xc = x - 1
+
 			yc = y - 1
-			if xc > 0 && yc > 0 && xc < height && yc < width {
-				pCompare = pixels[xc][yc]
-				if p == pCompare {
-					//2d to 1d array
-					g.AddBoth(a2dTo1d(x, y, height), a2dTo1d(xc, yc, height))
-				}
+			pc = getPixel(pixels, x-1, y-1)
+			if p == pc {
+				g.AddBoth(a2dTo1d(x, y, a2dSize), a2dTo1d(xc, yc, a2dSize))
 			}
 
 			xc = x
 			yc = y - 1
-			if xc > 0 && yc > 0 && xc < height && yc < width {
-				pCompare = pixels[xc][yc]
-				if p == pCompare {
-					//2d to 1d array
-					g.AddBoth(a2dTo1d(x, y, height), a2dTo1d(xc, yc, height))
-				}
+			pc = getPixel(pixels, x, y-1)
+			if p == pc {
+				g.AddBoth(a2dTo1d(x, y, a2dSize), a2dTo1d(xc, yc, a2dSize))
 			}
 
 			xc = x + 1
 			yc = y - 1
-			if xc > 0 && yc > 0 && xc < height && yc < width {
-				pCompare = pixels[xc][yc]
-				if p == pCompare {
-					// if x <= xc || y <= yc {
-					//2d to 1d array
-					g.AddBoth(a2dTo1d(x, y, height), a2dTo1d(xc, yc, height))
+			pc = getPixel(pixels, x+1, y-1)
+			if p == pc {
+				g.AddBoth(a2dTo1d(x, y, a2dSize), a2dTo1d(xc, yc, a2dSize))
 
-				}
 			}
 			xc = x - 1
 			yc = y
-			p = pixels[x][y]
-			if xc > 0 && yc > 0 && xc < height && yc < width {
-				pCompare = pixels[xc][yc]
-				if p == pCompare {
-					//2d to 1d array
-					g.AddBoth(a2dTo1d(x, y, height), a2dTo1d(xc, yc, height))
-				}
+
+			pc = getPixel(pixels, x-1, y)
+			if p == pc {
+				g.AddBoth(a2dTo1d(x, y, a2dSize), a2dTo1d(xc, yc, a2dSize))
 			}
 
 		}
+	}
+	if genSVG {
+		generateSVG(pixels, *g, "./results/1.genGraph")
 	}
 	return g
 }
@@ -141,29 +133,34 @@ func genGraph(pixels [][]Pixel) *graph.Mutable {
 // analyse block of 2x2 vertex to delete the max amount of edges and alse remover cross conections between this vertexes/pixels
 // 00 10
 // 01 11
-func solveAmbiguities(pixels [][]Pixel, g graph.Mutable) {
+func solveAmbiguities(pixels [][]Pixel, g graph.Mutable, genSVG bool) {
 
 	width := len(pixels)
 	height := len(pixels[0])
 
+	//Vertex being analysed
+	p00, p10 := 0, 0
+	p01, p11 := 0, 0
+
+	//Pixel Color
+	c00, c01 := Pixel{}, Pixel{}
+
 	for x := 0; x < width; x++ {
 		for y := 0; y < height; y++ {
-			p00 := a2dTo1d(x, y, width)
-			c00 := pixels[x][y]
+			p00 = a2dTo1d(x, y, height)
+			c00 = getPixel(pixels, x, y)
 
-			p10 := a2dTo1d(x+1, y, width)
-			//c10 := pixels[x+1][y]
+			p10 = a2dTo1d(x+1, y, height)
 
-			p01 := a2dTo1d(x, y+1, width)
-			c01 := pixels[x][y+1]
+			p01 = a2dTo1d(x, y+1, height)
+			c01 = getPixel(pixels, x, y+1)
 
-			p11 := a2dTo1d(x+1, y+1, width)
-			//c11 := pixels[x+1][y+1]
+			p11 = a2dTo1d(x+1, y+1, height)
 
 			//Crossing edges that we need to elimnate
 			if g.Edge(p11, p00) && g.Edge(p01, p10) {
 				// Ambiguity
-				if c00 == c01 { //Same color
+				if c00 == c01 && c00 != (Pixel{}) { //Same color and not empty pixel
 					if g.Edge(p11, p00) {
 						g.Delete(p11, p00)
 					}
@@ -195,8 +192,23 @@ func solveAmbiguities(pixels [][]Pixel, g graph.Mutable) {
 
 		}
 	}
+	if genSVG {
+		generateSVG(pixels, g, "./results/2.solveAmbiguities")
+	}
 
 }
-func curveSize(g *graph.Mutable, p00 int, p01 int, p10 int, p11 int) int {
+func curveSize(g graph.Mutable, p00 int, p01 int, p10 int, p11 int) int {
 	return 0
+}
+
+func getPixel(pixels [][]Pixel, x int, y int) Pixel {
+	width := len(pixels)
+	height := len(pixels[0])
+
+	if x >= 0 && y >= 0 && x < width && y < height {
+		println(x, y)
+		return pixels[x][y]
+	}
+	return Pixel{}
+
 }
