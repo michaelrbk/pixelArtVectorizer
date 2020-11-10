@@ -4,34 +4,8 @@ import (
 	"fmt"
 	"image"
 	"image/png"
-	"io"
 	"os"
 )
-
-func copy(src, dst string) (int64, error) {
-	sourceFileStat, err := os.Stat(src)
-	if err != nil {
-		return 0, err
-	}
-
-	if !sourceFileStat.Mode().IsRegular() {
-		return 0, fmt.Errorf("%s is not a regular file", src)
-	}
-
-	source, err := os.Open(src)
-	if err != nil {
-		return 0, err
-	}
-	defer source.Close()
-
-	destination, err := os.Create(dst)
-	if err != nil {
-		return 0, err
-	}
-	defer destination.Close()
-	nBytes, err := io.Copy(destination, source)
-	return nBytes, err
-}
 
 func readImage(file string) (image.Image, error) {
 	// Read image from file that already exists
@@ -40,8 +14,6 @@ func readImage(file string) (image.Image, error) {
 		return nil, err
 	}
 	defer existingImageFile.Close()
-	//Copy to result
-	copy(file, "./results/0.source.png")
 
 	// Calling the generic image.Decode() will tell give us the data
 	// and type of image it is as a string. We expect "png"

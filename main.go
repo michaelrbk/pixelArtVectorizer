@@ -87,7 +87,9 @@ func genGraph(pixels [][]Pixel, genSVG bool) *graph.Mutable {
 		}
 	}
 	if genSVG {
-		generateSVG(pixels, *g, "./results/1.genGraph")
+
+		generateSVG(pixels, *g, SvgConfig{"./results/0.source", false, false})
+		generateSVG(pixels, *g, SvgConfig{"./results/1.genGraph", true, true})
 	}
 	return g
 }
@@ -146,7 +148,7 @@ func solveAmbiguities(pixels [][]Pixel, g graph.Mutable, genSVG bool) {
 		}
 	}
 	if genSVG {
-		generateSVG(pixels, g, "./results/2.solveAmbiguities")
+		generateSVG(pixels, g, SvgConfig{"./results/2.solveAmbiguities", true, true})
 	}
 
 }

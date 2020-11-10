@@ -8,7 +8,7 @@ The old version was a proof of concept and the creation of the core algorith. Th
 
 
 * Source file
-![source](./results/0.source.png)
+![genGraph](./results/0.source.svg)
 * Generating a graph with similar color
 ![genGraph](./results/1.genGraph.svg)
 * Solving ambiquities in the graph's connections 
