@@ -13,6 +13,12 @@ type Pixel struct {
 	Y     int
 }
 
+//Point
+type Point struct {
+	X int
+	Y int
+}
+
 // Color of Pixel
 type Color struct {
 	R int
@@ -45,7 +51,6 @@ func getPixels(img image.Image) ([][]Pixel, error) {
 
 	return pixels, nil
 }
-
 
 // img.At(x, y).RGBA() returns four uint32 values; we want a Pixel
 func rgbaToColor(r uint32, g uint32, b uint32, a uint32) Color {
