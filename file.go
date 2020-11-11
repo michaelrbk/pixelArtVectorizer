@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"image"
 	"image/png"
 	"os"
@@ -17,13 +16,13 @@ func readImage(file string) (image.Image, error) {
 
 	// Calling the generic image.Decode() will tell give us the data
 	// and type of image it is as a string. We expect "png"
-	imageData, imageType, err := image.Decode(existingImageFile)
+	/*imageData, imageType, err := image.Decode(existingImageFile)
 	if err != nil {
 		return nil, err
 	}
 
 	fmt.Println(imageData)
-	fmt.Println(imageType)
+	fmt.Println(imageType)*/
 
 	// We only need this because we already read from the file
 	// We have to reset the file pointer back to beginning
@@ -35,6 +34,6 @@ func readImage(file string) (image.Image, error) {
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println(loadedImage)
+	//fmt.Println(loadedImage)
 	return loadedImage, nil
 }

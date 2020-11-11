@@ -137,12 +137,40 @@ func solveAmbiguities(pixels [][]Pixel, g graph.Mutable, genSVG bool) {
 				} else {
 					// curve heuristic
 					if g.Degree(p01.V) == 2 || g.Degree(p10.V) == 2 || g.Degree(p11.V) == 2 || g.Degree(p00.V) == 2 { // is part of a curve the bigger curve is keep connected
-						// if curve size from edge1 <= edge2
-						// 	remove edge1
-						// else remove edge 2
+						if curveSize(g, p01.V, p10.V) <= curveSize(g, p11.V, p00.V) {
+							g.DeleteBoth(p01.V, p10.V)
+						} else {
+							g.DeleteBoth(p11.V, p00.V)
+						}
 					} else {
 						//heuristic of overlapping pixels
+						sumC1 := 0
+						sumC2 := 0
+						//start x and y with -4 positions to check 3 pixels in both ways
+						xs := x - 4
+						ys := y - 4
+						c1 := p00.Color
+						c2 := p01.Color
+
+						for xs <= x+3 {
+							for ys <= y+3 {
+								if p00.Color == c1 {
+									sumC1++
+								} else if p00.Color == c2 {
+									sumC2++
+								}
+								ys++
+							}
+							xs++
+						}
+						//the color in largest amount represents the background and should be kept connected
+						if sumC1 > sumC2 {
+							g.DeleteBoth(p11.V, p00.V)
+						} else {
+							g.DeleteBoth(p01.V, p10.V)
+						}
 					}
+
 				}
 			}
 		}
@@ -152,9 +180,46 @@ func solveAmbiguities(pixels [][]Pixel, g graph.Mutable, genSVG bool) {
 	}
 
 }
-func curveSize(g graph.Mutable, p00 int, p01 int, p10 int, p11 int) int {
-	// todo:
-	return 0
+
+//curveSize return the size of the 1 pixel line
+func curveSize(g graph.Mutable, verticeA int, verticeB int) int {
+	size := 0
+	hasEdge := true
+	if g.Degree(verticeA) == 2 || g.Degree(verticeB) == 2 {
+		size++
+		for hasEdge {
+
+			hasEdge = false
+			if g.Degree(verticeA) == 2 {
+				size++
+
+				g.Visit(verticeA, func(w int, c int64) (skip bool) {
+					if w == verticeA || w == verticeB {
+						skip = true // Aborts the call to Visit.
+					}
+					verticeA = w
+					hasEdge = true
+					return
+				})
+
+			}
+
+			if g.Degree(verticeB) == 2 {
+				size++
+
+				g.Visit(verticeB, func(w int, c int64) (skip bool) {
+					if w == verticeB || w == verticeA {
+						skip = true // Aborts the call to Visit.
+					}
+					verticeB = w
+					hasEdge = true
+					return
+				})
+
+			}
+		}
+	}
+	return size
 }
 
 func getPixel(pixels [][]Pixel, x int, y int) Pixel {
