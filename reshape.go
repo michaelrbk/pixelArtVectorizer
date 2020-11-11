@@ -8,7 +8,7 @@ func reshape(pixels [][]Pixel, g graph.Mutable, scale int, genSVG bool) {
 	// scale := 50
 
 	if genSVG {
-		generateSVG(pixels, g, SvgConfig{"./results/2.solveAmbiguities", true, true})
+		//	generateSVG(pixels, g, SvgConfig{"./results/2.solveAmbiguities", true, true})
 	}
 
 }

@@ -3,8 +3,6 @@ package main
 import (
 	"os"
 
-	"github.com/yourbasic/graph"
-
 	svg "github.com/ajstarks/svgo"
 )
 
@@ -15,7 +13,7 @@ type SvgConfig struct {
 	withEdges    bool
 }
 
-func generateSVG(pixels [][]Pixel, g graph.Mutable, config SvgConfig) {
+func generateSVG(pixels [][]Pixel, g Graph, config SvgConfig) {
 	scale := 50
 	height := len(pixels)
 	width := len(pixels[0])
@@ -55,7 +53,7 @@ func generateSVG(pixels [][]Pixel, g graph.Mutable, config SvgConfig) {
 		p1 := Pixel{}
 		p2 := Pixel{}
 		for v := 0; v < g.Order(); v++ {
-			g.Visit(v, func(w int, c int64) (skip bool) {
+			g.Visit(v, func(w int) (skip bool) {
 				p1 = getPixelV(pixels, v)
 				p2 = getPixelV(pixels, w)
 				canvas.Line(p1.X*scale+scale/2, p1.Y*scale+scale/2,

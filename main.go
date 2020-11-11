@@ -3,8 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-
-	"github.com/yourbasic/graph"
 )
 
 func main() {
@@ -27,7 +25,7 @@ func main() {
 	//bi-dimensional pixel array
 	g := genGraph(pixels, true)
 
-	solveAmbiguities(pixels, *g, true)
+	solveAmbiguities(pixels, g, true)
 	// reshapePixelCell(pixels, *g, true)
 	// drawNewGraphEdges()
 	// createNewCurves()
@@ -41,40 +39,45 @@ mario_8bit.png example
 	width 19
 	height 18
 */
-func genGraph(pixels [][]Pixel, genSVG bool) *graph.Mutable {
+func genGraph(pixels [][]Pixel, genSVG bool) Graph {
 
 	width := len(pixels)
 	height := len(pixels[0])
-	g := graph.New(width * height)
+	g := Graph{}
 	xc := 0
 	yc := 0
+	g.edges = make([][]int, 0)
 	p := Pixel{}
 	pc := p //Comparison pixel
 	for x := 0; x < width; x++ {
 		for y := 0; y < height; y++ {
 
 			p = pixels[x][y]
+			var vertex []int
+			g.edges = append(g.edges, vertex)
 
 			xc = x - 1
 
 			yc = y - 1
 			pc = getPixel(pixels, xc, yc)
 			if p.Color == pc.Color {
-				g.AddBoth(p.V, pc.V)
+				//g.AddBoth(p.V, pc.V)
+				g.edges[p.V] = append(g.edges[p.V], pc.V)
 			}
 
 			xc = x
 			yc = y - 1
 			pc = getPixel(pixels, xc, yc)
 			if p.Color == pc.Color {
-				g.AddBoth(p.V, pc.V)
+				g.edges[p.V] = append(g.edges[p.V], pc.V)
 			}
 
 			xc = x + 1
 			yc = y - 1
 			pc = getPixel(pixels, xc, yc)
 			if p.Color == pc.Color {
-				g.AddBoth(p.V, pc.V)
+				//g.AddBoth(p.V, pc.V)
+				g.edges[p.V] = append(g.edges[p.V], pc.V)
 
 			}
 			xc = x - 1
@@ -82,16 +85,18 @@ func genGraph(pixels [][]Pixel, genSVG bool) *graph.Mutable {
 
 			pc = getPixel(pixels, xc, yc)
 			if p.Color == pc.Color {
-				g.AddBoth(p.V, pc.V)
+				//g.AddBoth(p.V, pc.V)
+				g.edges[p.V] = append(g.edges[p.V], pc.V)
 			}
 		}
 	}
 	if genSVG {
 
-		generateSVG(pixels, *g, SvgConfig{"./results/0.source", false, false})
-		generateSVG(pixels, *g, SvgConfig{"./results/1.genGraph", true, true})
+		generateSVG(pixels, g, SvgConfig{"./results/0.source", false, false})
+		generateSVG(pixels, g, SvgConfig{"./results/1.genGraph", true, true})
 	}
 	return g
+
 }
 
 func getPixel(pixels [][]Pixel, x int, y int) Pixel {

@@ -1,12 +1,10 @@
 package main
 
-import "github.com/yourbasic/graph"
-
 // solveAmbiguities
 // analyse block of 2x2 vertex to delete the max amount of edges and alse remover cross conections between this vertexes/pixels
 // 00 10
 // 01 11
-func solveAmbiguities(pixels [][]Pixel, g graph.Mutable, genSVG bool) {
+func solveAmbiguities(pixels [][]Pixel, g Graph, genSVG bool) {
 
 	width := len(pixels)
 	height := len(pixels[0])
@@ -90,7 +88,7 @@ func solveAmbiguities(pixels [][]Pixel, g graph.Mutable, genSVG bool) {
 }
 
 //curveSize return the size of the 1 pixel line
-func curveSize(g graph.Mutable, verticeA int, verticeB int) int {
+func curveSize(g Graph, verticeA int, verticeB int) int {
 	size := 0
 	hasEdge := true
 	if g.Degree(verticeA) == 2 || g.Degree(verticeB) == 2 {
@@ -101,7 +99,7 @@ func curveSize(g graph.Mutable, verticeA int, verticeB int) int {
 			if g.Degree(verticeA) == 2 {
 				size++
 
-				g.Visit(verticeA, func(w int, c int64) (skip bool) {
+				g.Visit(verticeA, func(w int) (skip bool) {
 					if w == verticeA || w == verticeB {
 						skip = true // Aborts the call to Visit.
 					}
@@ -115,7 +113,7 @@ func curveSize(g graph.Mutable, verticeA int, verticeB int) int {
 			if g.Degree(verticeB) == 2 {
 				size++
 
-				g.Visit(verticeB, func(w int, c int64) (skip bool) {
+				g.Visit(verticeB, func(w int) (skip bool) {
 					if w == verticeB || w == verticeA {
 						skip = true // Aborts the call to Visit.
 					}

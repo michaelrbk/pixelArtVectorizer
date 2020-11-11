@@ -13,12 +13,6 @@ type Pixel struct {
 	Y     int
 }
 
-//Point
-type Point struct {
-	X int
-	Y int
-}
-
 // Color of Pixel
 type Color struct {
 	R int
