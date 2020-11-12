@@ -1,18 +1,18 @@
 package main
 
+//reshape all the pixel in the original PixelArt
+//here we analyse every pixel checking the connections around it in a 3x3 window around it
 func reshape(pixels [][]Pixel, g *Graph, genSVG bool) {
-	// width := len(pixels)
-	// height := len(pixels[0])
 	scale := 7
 
 	//Visit all Vertices
 	for v := 0; v < g.Order(); v++ {
-		//TOP LEFT
+		//Top Left of new pixel
 		/*
-			if has tl
+			if has edge to tl
 			   -2 +2
 			   +2 -2
-			if the top has bl
+			if the top has edge to bl
 				+2 +2
 			else
 				0 0
@@ -42,17 +42,16 @@ func reshape(pixels [][]Pixel, g *Graph, genSVG bool) {
 			pixels[x][y].Points = append(pixels[x][y].Points, Point{x*scale + 0, y*scale + 0})
 		}
 
-		//TOP RIGHT
+		//Top Right of new pixel
 		/*
-			if has tr
+			if has edge to tr
 				+5 -2
 				+9 +2
-			if the top has br
+			if the top has edge br
 				+5  +2
 			else
 				+7  +0
 		*/
-
 		if g.Edge(p.V, tr.V) { //Edge between center pixel and top right
 			pixels[x][y].Points = append(pixels[x][y].Points, Point{x*scale + 5, y*scale - 2})
 			pixels[x][y].Points = append(pixels[x][y].Points, Point{x*scale + 9, y*scale + 2})
@@ -62,40 +61,39 @@ func reshape(pixels [][]Pixel, g *Graph, genSVG bool) {
 			pixels[x][y].Points = append(pixels[x][y].Points, Point{x*scale + 7, y*scale + 0})
 		}
 
-		//botton righ
+		//Botton Right of new pixel
 		/*
-			if has br
+			if has edge to br
 				  +9 +5
 				  +5 +9
-			if the top has tr
+			if the top has edge to tr
 				  +5  +5
 			else
 				  +7  +7
 		*/
-
-		if g.Edge(p.V, br.V) { //Edge between center pixel and below right
+		if g.Edge(p.V, br.V) { //Edge between center pixel and botton right
 			pixels[x][y].Points = append(pixels[x][y].Points, Point{x*scale + 9, y*scale + 5})
 			pixels[x][y].Points = append(pixels[x][y].Points, Point{x*scale + 5, y*scale + 9})
-		} else if g.Edge(b.V, r.V) { //Edge between below pixel and the pixel to the righ
+		} else if g.Edge(b.V, r.V) { //Edge between botton pixel and the pixel to the righ
 			pixels[x][y].Points = append(pixels[x][y].Points, Point{x*scale + 5, y*scale + 5})
 		} else {
 			pixels[x][y].Points = append(pixels[x][y].Points, Point{x*scale + 7, y*scale + 7})
 		}
 
-		//BOTTON LEFT
+		//Botton Left of new pixel
 		/*
-			if has bl
+			if has edge to bl
 				   +2 +9
 				   -2 +5
-			if the top has tl
+			if the top has edge to tl
 				   +2 +5
 			else
 				   +0 +7
 		*/
-		if g.Edge(p.V, bl.V) { //Edge between center pixel and below left
+		if g.Edge(p.V, bl.V) { //Edge between center pixel and botton left
 			pixels[x][y].Points = append(pixels[x][y].Points, Point{x*scale + 2, y*scale + 9})
 			pixels[x][y].Points = append(pixels[x][y].Points, Point{x*scale - 2, y*scale + 5})
-		} else if g.Edge(b.V, l.V) { //Edge between below pixel and left pixel
+		} else if g.Edge(b.V, l.V) { //Edge between below pixel and botton pixel
 			pixels[x][y].Points = append(pixels[x][y].Points, Point{x*scale + 2, y*scale + 5})
 		} else {
 			pixels[x][y].Points = append(pixels[x][y].Points, Point{x*scale + 0, y*scale + 7})
