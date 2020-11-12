@@ -10,11 +10,18 @@ func genGraph(pixels [][]Pixel, genSVG bool) Graph {
 	width := len(pixels)
 	height := len(pixels[0])
 
-	g := NewGraph(width * height)
+	g := NewGraph()
 	xc := 0
 	yc := 0
 	p := Pixel{}
 	pc := p //Comparison pixel
+
+	//Add vertex for all pixels
+	for x := 0; x < width; x++ {
+		for y := 0; y < height; y++ {
+			g.AddVertex()
+		}
+	}
 
 	for x := 0; x < width; x++ {
 		for y := 0; y < height; y++ {

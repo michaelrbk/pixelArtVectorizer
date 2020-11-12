@@ -8,12 +8,13 @@ const initialMapSize = 4
 
 // Graph with pixel information
 type Graph struct {
-	edges []map[int]Color
+	edges map[int]map[int]Color
 }
 
-// NewGraph constructs a new graph with n vertices, numbered from 0 to n-1, and no edges.
-func NewGraph(n int) *Graph {
-	return &Graph{edges: make([]map[int]Color, n)}
+// NewGraph constructs a new graph
+func NewGraph() *Graph {
+	//return &Graph{edges: make([]map[int]Color, n)}
+	return &Graph{edges: make(map[int]map[int]Color)}
 }
 
 // Order returns the number of vertices in the graph.
@@ -32,6 +33,13 @@ func (g *Graph) Edge(v, w int) bool {
 	_, ok := g.edges[v][w]
 
 	return ok
+}
+
+// AddVertex and return its index
+func (g *Graph) AddVertex() int {
+	v := len(g.edges)
+	g.edges[v] = make(map[int]Color)
+	return v
 }
 
 // Add inserts a directed edge from v to w with zero cost.
