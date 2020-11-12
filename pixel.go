@@ -5,12 +5,19 @@ import (
 	"image"
 )
 
-// Pixel struct example
+// Pixel struct
 type Pixel struct {
-	V     int // index in graph
-	Color Color
-	X     int
-	Y     int
+	V      int // index in graph
+	Color  Color
+	X      int
+	Y      int
+	Points []Point
+}
+
+//Point struct
+type Point struct {
+	X int
+	Y int
 }
 
 // Color of Pixel
@@ -37,7 +44,7 @@ func getPixels(img image.Image) ([][]Pixel, error) {
 	for x := 0; x < width; x++ {
 		var col []Pixel
 		for y := 0; y < height; y++ {
-			col = append(col, Pixel{vCount, rgbaToColor(img.At(x, y).RGBA()), x, y})
+			col = append(col, Pixel{vCount, rgbaToColor(img.At(x, y).RGBA()), x, y, []Point{}})
 			vCount++
 		}
 		pixels = append(pixels, col)

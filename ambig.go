@@ -82,7 +82,7 @@ func solveAmbiguities(pixels [][]Pixel, g *Graph, genSVG bool) {
 		}
 	}
 	if genSVG {
-		generateSVG(pixels, g, SvgConfig{"./results/2.solveAmbiguities", true, true})
+		generateSVG(pixels, g, SvgConfig{"./results/2.solveAmbiguities", 50, true, true, true, false})
 	}
 
 }

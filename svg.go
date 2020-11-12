@@ -9,12 +9,15 @@ import (
 // SvgConfig configurations to SVG file
 type SvgConfig struct {
 	fileName     string
+	scale        int
+	withPixel    bool
 	withVertices bool
 	withEdges    bool
+	withPoints   bool
 }
 
 func generateSVG(pixels [][]Pixel, g *Graph, config SvgConfig) {
-	scale := 50
+	scale := config.scale
 	height := len(pixels)
 	width := len(pixels[0])
 
@@ -24,15 +27,17 @@ func generateSVG(pixels [][]Pixel, g *Graph, config SvgConfig) {
 	canvas.Start(width*scale, height*scale)
 
 	//Print all pixels squares
-	for y := 0; y < width; y++ {
-		for x := 0; x < height; x++ {
-			p = pixels[x][y]
-			canvas.Rect(x*scale, y*scale, scale, scale,
-				"fill=\""+p.Color.hexColor()+"\" stroke=\"Black\" stroke-width=\"1\"")
+	if config.withPixel {
+		for y := 0; y < width; y++ {
+			for x := 0; x < height; x++ {
+				p = pixels[x][y]
+				canvas.Rect(x*scale, y*scale, scale, scale,
+					"fill=\""+p.Color.hexColor()+"\" stroke=\"Black\" stroke-width=\"1\"")
+			}
 		}
 	}
 
-	//Print all Vertex points
+	//Print all Vertex center points
 	if config.withVertices {
 		r := scale / 10 //radius
 		if scale < 10 {
@@ -44,6 +49,25 @@ func generateSVG(pixels [][]Pixel, g *Graph, config SvgConfig) {
 				p = pixels[x][y]
 				canvas.Circle(x*scale+scale/2, y*scale+scale/2, r,
 					"fill=\"blue\" stroke=\"Black\" stroke-width=\"1\"")
+			}
+		}
+	}
+
+	if config.withPoints {
+
+		for y := 0; y < width; y++ {
+			for x := 0; x < height; x++ {
+				p = pixels[x][y]
+				var sX []int
+				var sY []int
+				for z := 0; z < len(p.Points); z++ {
+					sX = append(sX, p.Points[z].X)
+					sY = append(sY, p.Points[z].Y)
+				}
+				if len(sX) > 0 {
+					canvas.Polygon(sX, sY,
+						"fill=\""+p.Color.hexColor()+"\" stroke=\"Black\" stroke-width=\"0.2\"")
+				}
 			}
 		}
 	}

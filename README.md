@@ -22,6 +22,12 @@ The old version was a proof of concept and the creation of the core algorith. Th
 <img src="./results/2.solveAmbiguities.svg" height="250">
 </p>
 
+* Reshaping the pixel
+<p align="center">
+<img src="./results/3.pixelReshape.svg" height="250">
+</p>
+
+
 Copyright [2020] [Michael de Rezende Becker]
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at

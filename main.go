@@ -26,7 +26,7 @@ func main() {
 	g := genGraph(pixels, true)
 
 	solveAmbiguities(pixels, &g, true)
-	// reshapePixelCell(pixels, *g, true)
+	reshape(pixels, &g, true)
 	// drawNewGraphEdges()
 	// createNewCurves()
 
@@ -60,21 +60,21 @@ func genGraph(pixels [][]Pixel, genSVG bool) Graph {
 			yc = y - 1
 			pc = getPixel(pixels, xc, yc)
 			if p.Color == pc.Color {
-				g.AddBoth(p.V, pc.V)
+				g.AddBoth(p.V, pc.V, p.Color)
 			}
 
 			xc = x
 			yc = y - 1
 			pc = getPixel(pixels, xc, yc)
 			if p.Color == pc.Color {
-				g.AddBoth(p.V, pc.V)
+				g.AddBoth(p.V, pc.V, p.Color)
 			}
 
 			xc = x + 1
 			yc = y - 1
 			pc = getPixel(pixels, xc, yc)
 			if p.Color == pc.Color {
-				g.AddBoth(p.V, pc.V)
+				g.AddBoth(p.V, pc.V, p.Color)
 
 			}
 			xc = x - 1
@@ -82,14 +82,14 @@ func genGraph(pixels [][]Pixel, genSVG bool) Graph {
 
 			pc = getPixel(pixels, xc, yc)
 			if p.Color == pc.Color {
-				g.AddBoth(p.V, pc.V)
+				g.AddBoth(p.V, pc.V, p.Color)
 			}
 		}
 	}
 	if genSVG {
 
-		generateSVG(pixels, g, SvgConfig{"./results/0.source", false, false})
-		generateSVG(pixels, g, SvgConfig{"./results/1.genGraph", true, true})
+		generateSVG(pixels, g, SvgConfig{"./results/0.source", 50, true, false, false, false})
+		generateSVG(pixels, g, SvgConfig{"./results/1.genGraph", 50, true, true, true, false})
 	}
 	return *g
 
@@ -102,7 +102,7 @@ func getPixel(pixels [][]Pixel, x int, y int) Pixel {
 	if x >= 0 && y >= 0 && x < width && y < height {
 		return pixels[x][y]
 	}
-	return Pixel{}
+	return Pixel{V: -1}
 
 }
 

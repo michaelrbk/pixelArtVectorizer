@@ -26,7 +26,11 @@ func (g *Graph) Edge(v, w int) bool {
 	if v < 0 || v >= g.Order() {
 		return false
 	}
+	if w < 0 || w >= g.Order() {
+		return false
+	}
 	_, ok := g.edges[v][w]
+
 	return ok
 }
 
@@ -51,10 +55,10 @@ func (g *Graph) AddCost(v, w int, c Color) {
 
 // AddBoth inserts edges with zero cost between v and w.
 // It removes the previous costs if these edges already exist.
-func (g *Graph) AddBoth(v, w int) {
-	g.Add(v, w)
+func (g *Graph) AddBoth(v, w int, c Color) {
+	g.AddCost(v, w, c)
 	if v != w {
-		g.Add(w, v)
+		g.AddCost(w, v, c)
 	}
 }
 
