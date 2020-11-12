@@ -25,7 +25,7 @@ func main() {
 	//bi-dimensional pixel array
 	g := genGraph(pixels, true)
 
-	solveAmbiguities(pixels, g, true)
+	solveAmbiguities(pixels, &g, true)
 	// reshapePixelCell(pixels, *g, true)
 	// drawNewGraphEdges()
 	// createNewCurves()
@@ -43,41 +43,38 @@ func genGraph(pixels [][]Pixel, genSVG bool) Graph {
 
 	width := len(pixels)
 	height := len(pixels[0])
-	g := Graph{}
+
+	g := NewGraph(width * height)
 	xc := 0
 	yc := 0
-	g.edges = make([][]int, 0)
 	p := Pixel{}
 	pc := p //Comparison pixel
+
 	for x := 0; x < width; x++ {
 		for y := 0; y < height; y++ {
 
 			p = pixels[x][y]
-			var vertex []int
-			g.edges = append(g.edges, vertex)
 
 			xc = x - 1
 
 			yc = y - 1
 			pc = getPixel(pixels, xc, yc)
 			if p.Color == pc.Color {
-				//g.AddBoth(p.V, pc.V)
-				g.edges[p.V] = append(g.edges[p.V], pc.V)
+				g.AddBoth(p.V, pc.V)
 			}
 
 			xc = x
 			yc = y - 1
 			pc = getPixel(pixels, xc, yc)
 			if p.Color == pc.Color {
-				g.edges[p.V] = append(g.edges[p.V], pc.V)
+				g.AddBoth(p.V, pc.V)
 			}
 
 			xc = x + 1
 			yc = y - 1
 			pc = getPixel(pixels, xc, yc)
 			if p.Color == pc.Color {
-				//g.AddBoth(p.V, pc.V)
-				g.edges[p.V] = append(g.edges[p.V], pc.V)
+				g.AddBoth(p.V, pc.V)
 
 			}
 			xc = x - 1
@@ -85,8 +82,7 @@ func genGraph(pixels [][]Pixel, genSVG bool) Graph {
 
 			pc = getPixel(pixels, xc, yc)
 			if p.Color == pc.Color {
-				//g.AddBoth(p.V, pc.V)
-				g.edges[p.V] = append(g.edges[p.V], pc.V)
+				g.AddBoth(p.V, pc.V)
 			}
 		}
 	}
@@ -95,7 +91,7 @@ func genGraph(pixels [][]Pixel, genSVG bool) Graph {
 		generateSVG(pixels, g, SvgConfig{"./results/0.source", false, false})
 		generateSVG(pixels, g, SvgConfig{"./results/1.genGraph", true, true})
 	}
-	return g
+	return *g
 
 }
 

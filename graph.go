@@ -4,9 +4,16 @@ import (
 	"strconv"
 )
 
+const initialMapSize = 4
+
 // Graph with pixel information
 type Graph struct {
-	edges [][]int
+	edges []map[int]Color
+}
+
+// NewGraph constructs a new graph with n vertices, numbered from 0 to n-1, and no edges.
+func NewGraph(n int) *Graph {
+	return &Graph{edges: make([]map[int]Color, n)}
 }
 
 // Order returns the number of vertices in the graph.
@@ -19,23 +26,27 @@ func (g *Graph) Edge(v, w int) bool {
 	if v < 0 || v >= g.Order() {
 		return false
 	}
-	if w < 0 || w >= len(g.edges[v]) {
-		return false
-	}
-	ok := g.edges[v][w] > 0
+	_, ok := g.edges[v][w]
 	return ok
 }
 
-// Add inserts a directed edge from v to w with cost c.
-// It overwrites the previous cost if this edge already exists.
+// Add inserts a directed edge from v to w with zero cost.
+// It removes the previous cost if this edge already exists.
 func (g *Graph) Add(v, w int) {
+	g.AddCost(v, w, Color{})
+}
+
+// AddCost inserts a directed edge from v to w with cost c.
+// It overwrites the previous cost if this edge already exists.
+func (g *Graph) AddCost(v, w int, c Color) {
 	// Make sure not to break internal state.
 	if w < 0 || w >= len(g.edges) {
 		panic("vertex out of range: " + strconv.Itoa(w))
 	}
 	if g.edges[v] == nil {
-		g.edges[v] = make([]int, 0)
+		g.edges[v] = make(map[int]Color, initialMapSize)
 	}
+	g.edges[v][w] = c
 }
 
 // AddBoth inserts edges with zero cost between v and w.
@@ -49,10 +60,7 @@ func (g *Graph) AddBoth(v, w int) {
 
 // Delete removes an edge from v to w.
 func (g *Graph) Delete(v, w int) {
-	// Remove the element at index i from a.
-	g.edges[v][w] = g.edges[v][len(g.edges[v])-1] // Copy last element to index i.
-	g.edges[v][len(g.edges[v])-1] = 0             // Erase last element (write zero value).
-	g.edges[v] = g.edges[v][:len(g.edges[v])-1]   // Truncate slice.
+	delete(g.edges[v], w)
 }
 
 // DeleteBoth removes all edges between v and w.
@@ -68,14 +76,24 @@ func (g *Graph) Degree(v int) int {
 	return len(g.edges[v])
 }
 
-// Visit calls the do function for each neighbor w of v,
+// VisitColor calls the do function for each neighbor w of v,
 // with c equal to the cost of the edge from v to w.
 // The neighbors are visited in increasing numerical order.
 // If do returns true, Visit returns immediately,
 // skipping any remaining neighbors, and returns true.
+func (g *Graph) VisitColor(v int, do func(w int, c Color) bool) bool {
+	for w, c := range g.edges[v] {
+		if do(w, c) {
+			return true
+		}
+	}
+	return false
+}
+
+// Visit calls the do function for each neighbor w of v,
 func (g *Graph) Visit(v int, do func(w int) bool) bool {
-	for _, e := range g.edges[v] {
-		if do(e) {
+	for w := range g.edges[v] {
+		if do(w) {
 			return true
 		}
 	}

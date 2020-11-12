@@ -4,7 +4,7 @@ package main
 // analyse block of 2x2 vertex to delete the max amount of edges and alse remover cross conections between this vertexes/pixels
 // 00 10
 // 01 11
-func solveAmbiguities(pixels [][]Pixel, g Graph, genSVG bool) {
+func solveAmbiguities(pixels [][]Pixel, g *Graph, genSVG bool) {
 
 	width := len(pixels)
 	height := len(pixels[0])
@@ -43,7 +43,7 @@ func solveAmbiguities(pixels [][]Pixel, g Graph, genSVG bool) {
 				} else {
 					// curve heuristic
 					if g.Degree(p01.V) == 2 || g.Degree(p10.V) == 2 || g.Degree(p11.V) == 2 || g.Degree(p00.V) == 2 { // is part of a curve the bigger curve is keep connected
-						if curveSize(g, p01.V, p10.V) <= curveSize(g, p11.V, p00.V) {
+						if curveSize(*g, p01.V, p10.V) <= curveSize(*g, p11.V, p00.V) {
 							g.DeleteBoth(p01.V, p10.V)
 						} else {
 							g.DeleteBoth(p11.V, p00.V)

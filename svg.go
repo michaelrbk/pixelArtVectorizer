@@ -13,7 +13,7 @@ type SvgConfig struct {
 	withEdges    bool
 }
 
-func generateSVG(pixels [][]Pixel, g Graph, config SvgConfig) {
+func generateSVG(pixels [][]Pixel, g *Graph, config SvgConfig) {
 	scale := 50
 	height := len(pixels)
 	width := len(pixels[0])
