@@ -49,7 +49,7 @@ func TestCurveSize(t *testing.T) {
 	g.AddBoth(1, 2, Color{})
 	g.AddBoth(2, 3, Color{})
 	n := curveSize(*g, 1, 2)
-	if n != 4 {
+	if n != 5 {
 		log.Fatal("Wrong Curve Size ", n)
 	}
 }
