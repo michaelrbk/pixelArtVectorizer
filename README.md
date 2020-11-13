@@ -9,25 +9,30 @@ The old version was a proof of concept and the creation of the core algorith. Th
 
 * Representation of the source file
 <p align="center">
-<img src="./results/0.source.svg" height="250">
+<img src="./results/0.source.svg" height="200">
 </p>
 
 * Generating a graph with similar color
 <p align="center">
-<img src="./results/1.genGraph.svg" height="250">
+<img src="./results/1.genGraph.svg" height="200">
 </p>
 
 * Solving ambiquities in the graph's connections 
 <p align="center">
-<img src="./results/2.solveAmbiguities.svg" height="250">
+<img src="./results/2.solveAmbiguities.svg" height="200">
 </p>
 
 * Reshaping the pixel
 <p align="center">
-<img src="./results/3.pixelReshape.svg" height="250">
+<img src="./results/3.pixelReshape.svg" height="200">
 </p>
 
 
+**Tests and Code Coverage**
+```
+go test -cover -coverprofile=/testData/cover
+go tool cover -html="./testData/cover" -o "./testData/coverage.html"
+```
 Copyright [2020] [Michael de Rezende Becker]
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
