@@ -93,6 +93,8 @@ func solveAmbiguities(pixels [][]Pixel, g *Graph, genSVG bool) {
 func curveSize(g Graph, verticeA int, verticeB int) int {
 	size := 0
 	hasEdge := true
+	va := -1
+	vb := -1
 	if g.Degree(verticeA) == 2 || g.Degree(verticeB) == 2 {
 		size++
 		for hasEdge {
@@ -102,11 +104,11 @@ func curveSize(g Graph, verticeA int, verticeB int) int {
 				size++
 
 				g.Visit(verticeA, func(w int) (skip bool) {
-					if w == verticeA || w == verticeB {
-						skip = true // Aborts the call to Visit.
+					if w != va && w != vb && w != verticeA && w != verticeB {
+						va = w
+						hasEdge = true
 					}
-					verticeA = w
-					hasEdge = true
+
 					return
 				})
 
@@ -116,15 +118,14 @@ func curveSize(g Graph, verticeA int, verticeB int) int {
 				size++
 
 				g.Visit(verticeB, func(w int) (skip bool) {
-					if w == verticeB || w == verticeA {
-						skip = true // Aborts the call to Visit.
+					if w != vb && w != va && w != verticeA && w != verticeB {
+						vb = w
+						hasEdge = true
 					}
-					verticeB = w
-					hasEdge = true
 					return
 				})
-
 			}
+
 		}
 	}
 	return size
