@@ -6,12 +6,17 @@ import (
 )
 
 func main() {
-	imagePath := os.Args[1:]
+	imagePath := os.Args[1]
+	vectorize(imagePath)
+}
+
+//vectorize
+func vectorize(imagePath string) {
 	if len(imagePath) == 0 {
 		fmt.Println("No image parameter received")
 		return
 	}
-	img, err := readImage(imagePath[0])
+	img, err := readImage(imagePath)
 	if err != nil {
 		fmt.Println("Error reading image", err)
 		return
@@ -29,5 +34,4 @@ func main() {
 	reshape(pixels, &g, true)
 	// drawNewGraphEdges()
 	// createNewCurves()
-
 }

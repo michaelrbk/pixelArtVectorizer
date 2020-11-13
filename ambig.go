@@ -41,6 +41,7 @@ func solveAmbiguities(pixels [][]Pixel, g *Graph, genSVG bool) {
 						g.DeleteBoth(p11.V, p00.V)
 					}
 				} else {
+
 					// curve heuristic
 					if g.Degree(p01.V) == 2 || g.Degree(p10.V) == 2 || g.Degree(p11.V) == 2 || g.Degree(p00.V) == 2 { // is part of a curve the bigger curve is keep connected
 						if curveSize(*g, p01.V, p10.V) <= curveSize(*g, p11.V, p00.V) {
@@ -49,6 +50,7 @@ func solveAmbiguities(pixels [][]Pixel, g *Graph, genSVG bool) {
 							g.DeleteBoth(p11.V, p00.V)
 						}
 					} else {
+
 						//heuristic of overlapping pixels
 						sumC1 := 0
 						sumC2 := 0
