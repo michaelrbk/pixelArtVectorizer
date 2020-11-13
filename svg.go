@@ -24,7 +24,7 @@ func generateSVG(pixels [][]Pixel, g *Graph, config SvgConfig) {
 	f, _ := os.Create(config.fileName + ".svg")
 	canvas := svg.New(f)
 	p := pixels[0][0]
-	canvas.Start(width*scale, height*scale)
+	canvas.Start(height*scale, width*scale)
 
 	//Print all pixels squares
 	if config.withPixel {
