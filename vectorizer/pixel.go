@@ -7,11 +7,11 @@ import (
 
 // Pixel struct
 type Pixel struct {
-	V      int // index in graph
-	Color  Color
-	X      int
-	Y      int
-	Points []Point
+	V              int // index in graph
+	Color          Color
+	X              int
+	Y              int
+	NewShapePoints []Point
 }
 
 //Point struct

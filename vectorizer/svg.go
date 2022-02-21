@@ -1,7 +1,6 @@
 package vectorizer
 
 import (
-	"log"
 	"os"
 
 	svg "github.com/ajstarks/svgo"
@@ -17,7 +16,7 @@ type SvgConfig struct {
 	withPoints   bool
 }
 
-func generateSVG(pixels [][]Pixel, g *Graph, config SvgConfig) {
+func generateSVG(pixels [][]Pixel, g *PixelArtGraph, config SvgConfig) {
 	scale := config.scale
 	height := len(pixels)
 	width := len(pixels[0])
@@ -38,7 +37,7 @@ func generateSVG(pixels [][]Pixel, g *Graph, config SvgConfig) {
 		}
 	}
 
-	//Print all Vertex center points
+	//Print all pixelArt center points
 	if config.withVertices {
 		r := scale / 10 //radius
 		if scale < 10 {
@@ -61,9 +60,9 @@ func generateSVG(pixels [][]Pixel, g *Graph, config SvgConfig) {
 				p = pixels[x][y]
 				var sX []int
 				var sY []int
-				for z := 0; z < len(p.Points); z++ {
-					sX = append(sX, p.Points[z].X)
-					sY = append(sY, p.Points[z].Y)
+				for z := 0; z < len(p.NewShapePoints); z++ {
+					sX = append(sX, p.NewShapePoints[z].X)
+					sY = append(sY, p.NewShapePoints[z].Y)
 				}
 				if len(sX) > 0 {
 					canvas.Polygon(sX, sY,
@@ -86,13 +85,10 @@ func generateSVG(pixels [][]Pixel, g *Graph, config SvgConfig) {
 					"stroke=\"Blue\"", "stroke-width=\"0.8\"")
 				return
 			})
-
 		}
 	}
 	canvas.End()
-	err := f.Close()
-	if err != nil {
-		log.Fatal(err)
+	if f.Close() != nil {
+		return
 	}
-
 }

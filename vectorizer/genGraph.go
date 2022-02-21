@@ -5,7 +5,7 @@ package vectorizer
 //	Dimensions 19 x 18
 //	width 19
 //	height 18
-func genGraph(pixels [][]Pixel, genSVG bool) Graph {
+func genGraph(pixels [][]Pixel, genSVG bool) PixelArtGraph {
 
 	width := len(pixels)
 	height := len(pixels[0])

@@ -4,7 +4,7 @@ package vectorizer
 // analyse block of 2x2 vertex to delete the max amount of edges and also remover cross connections between these vertexes/pixels
 // 00 10
 // 01 11
-func solveAmbiguities(pixels [][]Pixel, g *Graph, genSVG bool) {
+func solveAmbiguities(pixels [][]Pixel, g *PixelArtGraph, genSVG bool) {
 
 	width := len(pixels)
 	height := len(pixels[0])
@@ -90,7 +90,7 @@ func solveAmbiguities(pixels [][]Pixel, g *Graph, genSVG bool) {
 }
 
 //curveSize return the size of the 1 pixel line
-func curveSize(g Graph, vertexA int, vertexB int) int {
+func curveSize(g PixelArtGraph, vertexA int, vertexB int) int {
 	size := 0
 	hasEdge := true
 	va := -1

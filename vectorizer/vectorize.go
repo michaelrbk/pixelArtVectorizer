@@ -23,6 +23,6 @@ func Vectorize(imagePath string) {
 
 	solveAmbiguities(pixels, &g, true)
 	reshape(pixels, &g, true)
-	// drawNewGraphEdges()
+	// newGraphEdges(pixels, &g, true)
 	// createNewCurves()
 }
