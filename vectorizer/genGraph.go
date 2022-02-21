@@ -79,7 +79,7 @@ func getPixel(pixels [][]Pixel, x int, y int) Pixel {
 
 }
 
-//getpixelv from Vertice index
+//getPixelV from Vertex index
 func getPixelV(pixels [][]Pixel, v int) Pixel {
 	width := len(pixels)
 	height := len(pixels[0])

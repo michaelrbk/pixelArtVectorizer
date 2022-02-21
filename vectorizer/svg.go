@@ -1,6 +1,7 @@
 package vectorizer
 
 import (
+	"log"
 	"os"
 
 	svg "github.com/ajstarks/svgo"
@@ -89,6 +90,9 @@ func generateSVG(pixels [][]Pixel, g *Graph, config SvgConfig) {
 		}
 	}
 	canvas.End()
-	f.Close()
+	err := f.Close()
+	if err != nil {
+		log.Fatal(err)
+	}
 
 }

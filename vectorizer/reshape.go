@@ -1,7 +1,7 @@
 package vectorizer
 
 //reshape all the pixel in the original PixelArt
-//here we analyse every pixel checking the connections around it in a 3x3 window around it
+//here we analyse every pixel checking the surrounding connections in a 3x3 window around it
 func reshape(pixels [][]Pixel, g *Graph, genSVG bool) {
 	scale := 7
 
@@ -61,7 +61,7 @@ func reshape(pixels [][]Pixel, g *Graph, genSVG bool) {
 			pixels[x][y].Points = append(pixels[x][y].Points, Point{x*scale + 7, y*scale + 0})
 		}
 
-		//Botton Right of new pixel
+		//Bottom Right of new pixel
 		/*
 			if has edge to br
 				  +9 +5
@@ -71,16 +71,16 @@ func reshape(pixels [][]Pixel, g *Graph, genSVG bool) {
 			else
 				  +7  +7
 		*/
-		if g.Edge(p.V, br.V) { //Edge between center pixel and botton right
+		if g.Edge(p.V, br.V) { //Edge between center pixel and bottom right
 			pixels[x][y].Points = append(pixels[x][y].Points, Point{x*scale + 9, y*scale + 5})
 			pixels[x][y].Points = append(pixels[x][y].Points, Point{x*scale + 5, y*scale + 9})
-		} else if g.Edge(b.V, r.V) { //Edge between botton pixel and the pixel to the righ
+		} else if g.Edge(b.V, r.V) { //Edge between bottom pixel and the pixel at the right
 			pixels[x][y].Points = append(pixels[x][y].Points, Point{x*scale + 5, y*scale + 5})
 		} else {
 			pixels[x][y].Points = append(pixels[x][y].Points, Point{x*scale + 7, y*scale + 7})
 		}
 
-		//Botton Left of new pixel
+		//Bottom Left of new pixel
 		/*
 			if has edge to bl
 				   +2 +9
@@ -90,10 +90,10 @@ func reshape(pixels [][]Pixel, g *Graph, genSVG bool) {
 			else
 				   +0 +7
 		*/
-		if g.Edge(p.V, bl.V) { //Edge between center pixel and botton left
+		if g.Edge(p.V, bl.V) { //Edge between center pixel and bottom left
 			pixels[x][y].Points = append(pixels[x][y].Points, Point{x*scale + 2, y*scale + 9})
 			pixels[x][y].Points = append(pixels[x][y].Points, Point{x*scale - 2, y*scale + 5})
-		} else if g.Edge(b.V, l.V) { //Edge between below pixel and botton pixel
+		} else if g.Edge(b.V, l.V) { //Edge between below pixel and bottom pixel
 			pixels[x][y].Points = append(pixels[x][y].Points, Point{x*scale + 2, y*scale + 5})
 		} else {
 			pixels[x][y].Points = append(pixels[x][y].Points, Point{x*scale + 0, y*scale + 7})

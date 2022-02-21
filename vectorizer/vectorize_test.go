@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestVectorizeSuperMarioKart(t *testing.T) {
+func TestVectorizeMarioKart(t *testing.T) {
 
 	Vectorize("./../testData/mario_kart.png")
 	_, err := os.Open("./../results/3.pixelReshape.svg")
@@ -41,7 +41,7 @@ func TestVectorizeDolphin(t *testing.T) {
 
 func TestCurveSize(t *testing.T) {
 	g := NewGraph()
-	p := (Pixel{})
+	p := Pixel{}
 	g.AddVertex(p)
 	g.AddVertex(p)
 	g.AddVertex(p)
@@ -56,7 +56,7 @@ func TestCurveSize(t *testing.T) {
 }
 func TestCurveSizeLoop(t *testing.T) {
 	g := NewGraph()
-	p := (Pixel{})
+	p := Pixel{}
 	g.AddVertex(p)
 	g.AddVertex(p)
 	g.AddVertex(p)

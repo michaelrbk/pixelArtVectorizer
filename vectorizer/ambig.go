@@ -1,7 +1,7 @@
 package vectorizer
 
 // solveAmbiguities
-// analyse block of 2x2 vertex to delete the max amount of edges and alse remover cross conections between this vertexes/pixels
+// analyse block of 2x2 vertex to delete the max amount of edges and also remover cross connections between these vertexes/pixels
 // 00 10
 // 01 11
 func solveAmbiguities(pixels [][]Pixel, g *Graph, genSVG bool) {
@@ -20,7 +20,7 @@ func solveAmbiguities(pixels [][]Pixel, g *Graph, genSVG bool) {
 			p01 = getPixel(pixels, x, y+1)
 			p11 = getPixel(pixels, x+1, y+1)
 
-			//Crossing edges that we need to elimenate
+			//Crossing edges that we need to eliminate
 			if g.Edge(p11.V, p00.V) && g.Edge(p01.V, p10.V) {
 				// Ambiguity
 				if p00.Color == p01.Color && p00.Color != (Color{}) { //Same color and not empty pixel
@@ -71,7 +71,7 @@ func solveAmbiguities(pixels [][]Pixel, g *Graph, genSVG bool) {
 							}
 							xs++
 						}
-						//the color in largest amount represents the background and should be kept connected
+						//the color in the largest amount represents the background and should be kept connected
 						if sumC1 > sumC2 {
 							g.DeleteBoth(p11.V, p00.V)
 						} else {
@@ -90,21 +90,21 @@ func solveAmbiguities(pixels [][]Pixel, g *Graph, genSVG bool) {
 }
 
 //curveSize return the size of the 1 pixel line
-func curveSize(g Graph, verticeA int, verticeB int) int {
+func curveSize(g Graph, vertexA int, vertexB int) int {
 	size := 0
 	hasEdge := true
 	va := -1
 	vb := -1
-	if g.Degree(verticeA) == 2 || g.Degree(verticeB) == 2 {
+	if g.Degree(vertexA) == 2 || g.Degree(vertexB) == 2 {
 		size++
 		for hasEdge {
 
 			hasEdge = false
-			if g.Degree(verticeA) == 2 {
+			if g.Degree(vertexA) == 2 {
 				size++
 
-				g.Visit(verticeA, func(w int) (skip bool) {
-					if w != va && w != vb && w != verticeA && w != verticeB {
+				g.Visit(vertexA, func(w int) (skip bool) {
+					if w != va && w != vb && w != vertexA && w != vertexB {
 						va = w
 						hasEdge = true
 					}
@@ -114,11 +114,11 @@ func curveSize(g Graph, verticeA int, verticeB int) int {
 
 			}
 
-			if g.Degree(verticeB) == 2 {
+			if g.Degree(vertexB) == 2 {
 				size++
 
-				g.Visit(verticeB, func(w int) (skip bool) {
-					if w != vb && w != va && w != verticeA && w != verticeB {
+				g.Visit(vertexB, func(w int) (skip bool) {
+					if w != vb && w != va && w != vertexA && w != vertexB {
 						vb = w
 						hasEdge = true
 					}

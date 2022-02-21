@@ -2,29 +2,29 @@
 Vectorize Pixel Arts in Go
 Convert pixel art to SVG vector image
 
-Basead on my previous project SVG Vectorize in .net framework https://github.com/michaelrbk/pixelart-vectorizer
+Based on my previous project SVG Vectorize in .net framework https://github.com/michaelrbk/pixelart-vectorizer
 
-The old version was a proof of concept and the creation of the core algorith. This new version in go langhas the goal to create a console app to convert a pixel art to a new image file vectorized. With several improvements aiming on make the algorith usable in other aplications, maybe a emulator.
+The old version was a proof of concept and the creation of the core algorithm. This new version in go lang has the goal to create a console app to convert a pixel art to a new image file vectorized. With several improvements aiming at make the algorithm usable in other applications, maybe even an emulator.
 
 
 * Representation of the source file
-<p align="center">
-<img src="./results/0.source.svg" height="200">
+<p style="text-align:center">
+<img src="./results/0.source.svg" height="200" alt="source">
 </p>
 
 * Generating a graph with similar color
-<p align="center">
-<img src="./results/1.genGraph.svg" height="200">
+<p style="text-align:center">
+<img src="./results/1.genGraph.svg" height="200" alt="genGraph">
 </p>
 
-* Solving ambiquities in the graph's connections 
-<p align="center">
-<img src="./results/2.solveAmbiguities.svg" height="200">
+* Solving ambiguities in the graph's connections 
+<p style="text-align:center">
+<img src="./results/2.solveAmbiguities.svg" height="200" alt="solveAmbiguities">
 </p>
 
 * Reshaping the pixel
-<p align="center">
-<img src="./results/3.pixelReshape.svg" height="200">
+<p style="text-align:center">
+<img src="./results/3.pixelReshape.svg" height="200" alt="pixelReshape">
 </p>
 
 
